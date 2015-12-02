@@ -1,0 +1,12 @@
+FROM golang
+
+ADD Makefile /
+WORKDIR /
+
+
+ADD server/ /go/src/github.com/karolhor/go-workshops-challange/server/
+
+
+RUN make buildgo
+
+CMD ["/bin/bash"]
