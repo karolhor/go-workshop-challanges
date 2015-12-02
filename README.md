@@ -1,2 +1,2 @@
-# go-workshop-challanges
-Challange result for https://github.com/exu/go-workshops
+# go-workshops-challange
+Challange result for https://github.com/exu/go-workshops/blob/master/CHALLANGE.md
