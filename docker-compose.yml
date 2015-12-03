@@ -1,2 +1,4 @@
 hello:
   build: ./server
+  ports:
+    - 8888:8888

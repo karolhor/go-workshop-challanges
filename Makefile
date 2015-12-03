@@ -10,4 +10,6 @@ builddocker:
 	docker cp `docker ps -q -n=1`:/hello ./server/bin/hello
 	chmod 755 ./server/bin/hello
 
-
+run:
+	docker-compose build
+	docker-compose up
