@@ -5,6 +5,8 @@ ADD Makefile /
 WORKDIR /go/src/github.com/karolhor/go-workshops-challange
 
 ADD server/ server/
+ADD clients/ clients/
+ADD common/ common/
 
 RUN go get -v ./...
 

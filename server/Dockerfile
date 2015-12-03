@@ -4,4 +4,4 @@ ADD ./bin/hello .
 
 CMD ["/hello"]
 
-EXPOSE 8888
+EXPOSE 8080

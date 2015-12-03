@@ -1,4 +1,14 @@
-hello:
+server:
   build: ./server
   ports:
-    - 8888:8888
+    - 8080:8080
+  links:
+    - json_api
+    - redis
+
+json_api:
+  build: ./clients
+  dockerfile: json_api.Dockerfile
+
+redis:
+  image: redis

@@ -1,6 +1,9 @@
 package message
 
-import "encoding/json"
+import (
+	"bytes"
+	"encoding/json"
+)
 
 // Message is basic struct shared with all clients
 type Message struct {
@@ -9,7 +12,11 @@ type Message struct {
 }
 
 func (msg Message) String() string {
-	result, _ := json.Marshal(msg)
 
-	return string(result)
+	var msgResult bytes.Buffer
+	encoder := json.NewEncoder(&msgResult)
+
+	encoder.Encode(msg)
+
+	return msgResult.String()
 }

@@ -1,22 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"github.com/karolhor/go-workshops-challange/common"
-	"github.com/karolhor/go-workshops-challange/server/publisher"
 	"github.com/labstack/echo"
 	mw "github.com/labstack/echo/middleware"
 	"net/http"
 	"strings"
 )
-
-
-var publishers []publisher.Publisher
-
-func init() {
-	publishers = []publisher.Publisher{
-		&publisher.JsonApiPublisher{"http://json_api:8000/"},
-		publisher.NewRedisPublisher("redis:6379")}
-}
 
 func assertContentTypeJSON(r *http.Request) *echo.HTTPError {
 	ct := r.Header.Get(echo.ContentType)
@@ -42,11 +33,9 @@ func publishMessage(c *echo.Context) error {
 		return echo.NewHTTPError(400, "body content is not in JSON format")
 	}
 
-	for _, publisher := range publishers {
-		go publisher.Publish(msg)
-	}
+	fmt.Println(msg.String())
 
-	return c.JSON(http.StatusOK, msg)
+	return c.NoContent(200)
 }
 
 func main() {
@@ -59,8 +48,8 @@ func main() {
 	// Routes
 	e.Post("/", publishMessage)
 
-	println("Running on port :8080")
+	println("Running on port :8000")
 
 	// Start server
-	e.Run(":8080")
+	e.Run(":8000")
 }
