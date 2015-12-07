@@ -9,3 +9,9 @@ server:
 json_api:
   build: ./clients
   dockerfile: json_api.Dockerfile
+
+logger:
+  build: ./clients
+  dockerfile: logger.Dockerfile
+  links:
+    - redis

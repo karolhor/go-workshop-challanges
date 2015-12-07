@@ -1,0 +1,6 @@
+{
+  "redis" : {
+    "address" : "redis:6379",
+    "pub_sub_channel": "channel"
+  }
+}

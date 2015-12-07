@@ -1,0 +1,6 @@
+{
+  "redis" : {
+      "address" : "localhost:6379",
+      "pub_sub_channel": "channel"
+    }
+}

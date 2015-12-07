@@ -25,6 +25,9 @@ _testmain.go
 
 bin/
 
-*/config/*
-!*/config/docker/*.json
+server/config/*
+clients/config/*
+
+!server/config/docker/
+!clients/config/docker/
 !*/config/*.json.dist
