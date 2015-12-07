@@ -1,21 +1,29 @@
 package main
 
 import (
+	"net/http"
+	"strings"
+
 	"github.com/karolhor/go-workshops-challange/common"
+	"github.com/karolhor/go-workshops-challange/common/config"
 	"github.com/karolhor/go-workshops-challange/server/publisher"
 	"github.com/labstack/echo"
 	mw "github.com/labstack/echo/middleware"
-	"net/http"
-	"strings"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-
 var publishers []publisher.Publisher
+var serverConfig *config.ServerConfig
 
 func init() {
+	serverConfigPath := kingpin.Flag("config", "Server configuration path").Short('c').Required().String()
+
+	kingpin.Parse()
+	serverConfig = config.NewServerConfigFromJSONFile(serverConfigPath)
+
 	publishers = []publisher.Publisher{
-		&publisher.JsonApiPublisher{"http://json_api:8000/"},
-		publisher.NewRedisPublisher("redis:6379")}
+		&publisher.JsonApiPublisher{ClientURL: serverConfig.Clients.JSONApiUrl},
+		publisher.NewRedisPublisher(serverConfig.RedisConfig)}
 }
 
 func assertContentTypeJSON(r *http.Request) *echo.HTTPError {
@@ -59,8 +67,8 @@ func main() {
 	// Routes
 	e.Post("/", publishMessage)
 
-	println("Running on port :8080")
+	println("Running on port :" + serverConfig.Port)
 
 	// Start server
-	e.Run(":8080")
+	e.Run(":" + serverConfig.Port)
 }

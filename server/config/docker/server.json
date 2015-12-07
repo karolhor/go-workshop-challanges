@@ -1,0 +1,10 @@
+{
+  "redis" : {
+    "address" : "redis:6379",
+    "pub_sub_channel": "channel"
+  },
+  "port": "8080",
+  "clients": {
+    "json_api_url": "http://json_api:8080/"
+  }
+}

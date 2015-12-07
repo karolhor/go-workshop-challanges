@@ -24,3 +24,7 @@ _testmain.go
 *.prof
 
 bin/
+
+*/config/*
+!*/config/docker/*.json
+!*/config/*.json.dist

@@ -1,0 +1,11 @@
+server:
+  build: ./server
+  ports:
+    - 8080:8080
+  links:
+    - json_api
+    - redis
+
+json_api:
+  build: ./clients
+  dockerfile: json_api.Dockerfile

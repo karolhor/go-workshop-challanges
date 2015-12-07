@@ -1,7 +1,9 @@
 FROM tianon/true
 
-ADD ./bin/hello .
+ADD ./bin/server .
+ADD ./config/docker/server.json .
 
-CMD ["/hello"]
+WORKDIR /
+CMD ["./server", "--config", "server.json"]
 
 EXPOSE 8080

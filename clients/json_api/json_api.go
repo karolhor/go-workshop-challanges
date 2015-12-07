@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"github.com/karolhor/go-workshops-challange/common"
+	"github.com/karolhor/go-workshops-challange/common/config"
 	"github.com/labstack/echo"
 	mw "github.com/labstack/echo/middleware"
+	"gopkg.in/alecthomas/kingpin.v2"
 	"net/http"
 	"strings"
 )
@@ -39,6 +41,11 @@ func publishMessage(c *echo.Context) error {
 }
 
 func main() {
+	configPath := kingpin.Flag("config", "Configuration path").Short('c').Required().String()
+
+	kingpin.Parse()
+	clientConfig := config.NewJsonApiConfigFromJSONFile(configPath)
+
 	e := echo.New()
 
 	// Middleware
@@ -48,8 +55,8 @@ func main() {
 	// Routes
 	e.Post("/", publishMessage)
 
-	println("Running on port :8000")
+	println("Running on port :" + clientConfig.Port)
 
 	// Start server
-	e.Run(":8000")
+	e.Run(":" + clientConfig.Port)
 }

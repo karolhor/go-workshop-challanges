@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/karolhor/go-workshops-challange/common"
+	"github.com/karolhor/go-workshops-challange/common/config"
 	"gopkg.in/redis.v3"
 	"net/http"
 )
@@ -33,23 +34,25 @@ func (p *JsonApiPublisher) Publish(msg *message.Message) error {
 
 // RedisPublisher part
 type RedisPublisher struct {
-	RedisClient *redis.Client
+	redisClient *redis.Client
+	channel     string
 }
 
 func (p *RedisPublisher) Publish(msg *message.Message) error {
-	return p.RedisClient.Publish("channel", msg.String()).Err()
+	return p.redisClient.Publish("channel", msg.String()).Err()
 }
 
 // NewRedisPublisher creates RedisPublisher with default options with given address
-func NewRedisPublisher(address string) *RedisPublisher {
-	redisPublisher := &RedisPublisher{}
-	redisPublisher.RedisClient = redis.NewClient(&redis.Options{
-		Addr:     address,
+func NewRedisPublisher(redisConfig *config.RedisConfig) *RedisPublisher {
+	redisPublisher := &RedisPublisher{channel: redisConfig.PubSubChannel}
+
+	redisPublisher.redisClient = redis.NewClient(&redis.Options{
+		Addr:     redisConfig.Address,
 		Password: "", // no password set
 		DB:       0,  // use default DB
 	})
 
-	if err := redisPublisher.RedisClient.Ping().Err(); err != nil {
+	if err := redisPublisher.redisClient.Ping().Err(); err != nil {
 		panic(err)
 	}
 
