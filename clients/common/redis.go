@@ -5,13 +5,15 @@ import (
 	"gopkg.in/redis.v3"
 )
 
-// RedisSubscriber part
-type RedisSubscriber struct {
-	redisClient *redis.Client
-	channel     string
-}
+type (
+	// RedisSubscriber part
+	RedisSubscriber struct {
+		redisClient *redis.Client
+		channel     string
+	}
 
-type RedisReceiveMsgHandler func(*redis.Message)
+	RedisReceiveMsgHandler func(*redis.Message)
+)
 
 func (rs *RedisSubscriber) Subscribe(channel string, handler RedisReceiveMsgHandler) {
 	pubsub, err := rs.redisClient.Subscribe(channel)

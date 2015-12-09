@@ -1,2 +1,10 @@
 redis:
   image: redis
+  ports:
+    - 7379:6379
+
+mongo:
+  image: mongo
+  command: --smallfiles
+  ports:
+    - 37017:27017

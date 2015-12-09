@@ -12,8 +12,10 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-var publishers []publisher.Publisher
-var serverConfig *config.ServerConfig
+var (
+	publishers []publisher.Publisher
+	serverConfig *config.ServerConfig
+)
 
 func init() {
 	serverConfigPath := kingpin.Flag("config", "Server configuration path").Short('c').Required().String()
@@ -43,7 +45,7 @@ func publishMessage(c *echo.Context) error {
 		return err
 	}
 
-	msg := &message.Message{AppName: "Karol"}
+	msg := &message.Message{Owner: "Karol"}
 	err := c.Bind(msg)
 
 	if err != nil {

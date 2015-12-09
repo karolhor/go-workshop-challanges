@@ -1,0 +1,10 @@
+{
+  "mongo" : {
+    "url" : "mongodb://mongo:27017",
+    "db_name" : "messages"
+  },
+  "redis" : {
+    "address" : "redis:6379",
+    "pub_sub_channel": "channel"
+  }
+}

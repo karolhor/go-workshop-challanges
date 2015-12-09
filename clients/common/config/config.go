@@ -2,15 +2,27 @@ package config
 
 import (
 	"encoding/json"
+	"github.com/karolhor/go-workshops-challange/common/config"
 	"io/ioutil"
 	"log"
-	"github.com/karolhor/go-workshops-challange/common/config"
 )
 
-type LoggerConfig struct {
-	config.WithRedisConfig
-	LogFilePath string `json:"log_file_path"`
-}
+type (
+	LoggerConfig struct {
+		config.WithRedisConfig
+		LogFilePath string `json:"log_file_path"`
+	}
+
+	mongoDBConfig struct {
+		URL string `json:"url"`
+		DbName string `json:"db_name"`
+	}
+
+	MongoConfig struct {
+		config.WithRedisConfig
+		MongoDBConfig *mongoDBConfig `json:"mongo"`
+	}
+)
 
 func NewLoggerConfigFromJSONFile(configPath *string) *LoggerConfig {
 	configData, err := ioutil.ReadFile(*configPath)
@@ -39,6 +51,22 @@ func NewJsonApiConfigFromJSONFile(configPath *string) *config.WithPortConfig {
 
 	if err := json.Unmarshal(configData, config); err != nil {
 		log.Fatalf("Json API config is not JSON valid. %v", err)
+	}
+
+	return config
+}
+
+func NewMongoConfigFromJSONFile(configPath *string) *MongoConfig {
+	configData, err := ioutil.ReadFile(*configPath)
+
+	if err != nil {
+		log.Fatalf("Could not open mongo config file. Path: '%v', Error: '%s", configPath, err)
+	}
+
+	config := &MongoConfig{}
+
+	if err := json.Unmarshal(configData, config); err != nil {
+		log.Fatalf("Mongo config is not JSON valid. %v", err)
 	}
 
 	return config

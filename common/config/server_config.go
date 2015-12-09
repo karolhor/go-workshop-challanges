@@ -6,15 +6,17 @@ import (
 	"log"
 )
 
-type ServerConfig struct {
-	WithPortConfig
-	WithRedisConfig
-	Clients *ClientsConfig `json:"clients"`
-}
+type  (
+	ClientsConfig struct {
+		JSONApiUrl string `json:"json_api_url"`
+	}
 
-type ClientsConfig struct {
-	JSONApiUrl string `json:"json_api_url"`
-}
+	ServerConfig struct {
+		WithPortConfig
+		WithRedisConfig
+		Clients *ClientsConfig `json:"clients"`
+	}
+)
 
 func NewServerConfigFromJSONFile(configPath *string) *ServerConfig {
 	configData, err := ioutil.ReadFile(*configPath)

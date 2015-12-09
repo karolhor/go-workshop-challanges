@@ -15,3 +15,10 @@ logger:
   dockerfile: logger.Dockerfile
   links:
     - redis
+
+mongo_app:
+  build: ./clients
+  dockerfile: mongo.Dockerfile
+  links:
+    - redis
+    - mongo

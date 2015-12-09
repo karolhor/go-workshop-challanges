@@ -7,8 +7,8 @@ import (
 
 // Message is basic struct shared with all clients
 type Message struct {
-	Msg     string `json:"message"`
-	AppName string `json:"app_name,omitempty"`
+	Msg   string `json:"message"`
+	Owner string `json:"owner,omitempty"`
 }
 
 func (msg Message) String() string {

@@ -2,10 +2,10 @@ FROM golang
 
 VOLUME /go
 
-ADD server/ /go/src/github.com/karolhor/go-workshops-challange/server/
-ADD clients/ /go/src/github.com/karolhor/go-workshops-challange/clients/
-ADD common/ /go/src/github.com/karolhor/go-workshops-challange/common/
+COPY server/ /app/server/
+COPY common/ /app/common/
+COPY clients/ /app/clients/
 
 WORKDIR /
-ADD Makefile /
+COPY Makefile /
 CMD ["make", "buildgo"]

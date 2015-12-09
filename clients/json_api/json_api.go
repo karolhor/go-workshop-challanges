@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
+	"github.com/karolhor/go-workshops-challange/clients/common/config"
 	"github.com/karolhor/go-workshops-challange/common"
 	"github.com/labstack/echo"
 	mw "github.com/labstack/echo/middleware"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"net/http"
 	"strings"
-	"github.com/karolhor/go-workshops-challange/clients/common/config"
 )
 
 func assertContentTypeJSON(r *http.Request) *echo.HTTPError {
@@ -28,7 +28,7 @@ func publishMessage(c *echo.Context) error {
 		return err
 	}
 
-	msg := &message.Message{AppName: "Karol"}
+	msg := &message.Message{Owner: "Karol"}
 	err := c.Bind(msg)
 
 	if err != nil {

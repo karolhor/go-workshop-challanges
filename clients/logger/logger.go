@@ -2,12 +2,12 @@ package main
 
 import (
 	"github.com/karolhor/go-workshops-challange/clients/common"
+	"github.com/karolhor/go-workshops-challange/clients/common/config"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"gopkg.in/redis.v3"
-	"log"
-	"github.com/karolhor/go-workshops-challange/clients/common/config"
-	"os"
 	"io"
+	"log"
+	"os"
 )
 
 var Logger *log.Logger

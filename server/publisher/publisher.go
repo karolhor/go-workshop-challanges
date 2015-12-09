@@ -9,15 +9,23 @@ import (
 	"net/http"
 )
 
-// Publisher interface
-type Publisher interface {
-	Publish(*message.Message) error
-}
+type (
+	// Publisher interface
+	Publisher interface {
+		Publish(*message.Message) error
+	}
 
-// JsonApiPublisher part
-type JsonApiPublisher struct {
-	ClientURL string
-}
+	// JsonApiPublisher part
+	JsonApiPublisher struct {
+		ClientURL string
+	}
+
+	// RedisPublisher part
+	RedisPublisher struct {
+		redisClient *redis.Client
+		channel     string
+	}
+)
 
 func (p *JsonApiPublisher) Publish(msg *message.Message) error {
 
@@ -30,12 +38,6 @@ func (p *JsonApiPublisher) Publish(msg *message.Message) error {
 	_, err := http.Post(p.ClientURL, "application/json", &msgBody)
 
 	return err
-}
-
-// RedisPublisher part
-type RedisPublisher struct {
-	redisClient *redis.Client
-	channel     string
 }
 
 func (p *RedisPublisher) Publish(msg *message.Message) error {
