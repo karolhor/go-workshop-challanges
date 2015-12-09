@@ -1,20 +1,34 @@
-default: builddocker
+default: build-docker
+
+app_dir = $$GOPATH/src/github.com/karolhor/go-workshops-challange
 
 buildgo:
-	CGO_ENABLED=0 GOOS=linux go build -ldflags "-s" -a -installsuffix cgo -o server ./go/src/github.com/karolhor/go-workshops-challange/server
-	CGO_ENABLED=0 GOOS=linux go build -ldflags "-s" -a -installsuffix cgo -o json_api ./go/src/github.com/karolhor/go-workshops-challange/clients/json_api
-	CGO_ENABLED=0 GOOS=linux go build -ldflags "-s" -a -installsuffix cgo -o logger ./go/src/github.com/karolhor/go-workshops-challange/clients/logger
+	cd $(app_dir) && go get -v ./...
 
-builddocker:
-	docker build -t karolhor/build-go-workshops-challange -f ./Dockerfile.build .
-	docker run -t karolhor/build-go-workshops-challange /bin/true
+	cd $(app_dir)/server && CGO_ENABLED=0 GOOS=linux go build -ldflags "-s" -a -installsuffix cgo -o /server .
+	cd $(app_dir)/clients/json_api && CGO_ENABLED=0 GOOS=linux go build -ldflags "-s" -a -installsuffix cgo -o /json_api .
+	cd $(app_dir)/clients/logger && CGO_ENABLED=0 GOOS=linux go build -ldflags "-s" -a -installsuffix cgo -o /logger .
+
+
+
+build-on-docker:
+	docker-compose -f docker-compose.build.yml build
+	docker-compose -f docker-compose.build.yml up
+
+build_container = $(shell docker ps -a | grep goworkshopschallange_build_1 | head -n 1 |  awk '{print $$1}')
+
+copy-bin-docker:
 	mkdir -p ./server/bin
 	mkdir -p ./clients/bin
-	docker cp `docker ps -q -n=1`:/server ./server/bin/server
-	docker cp `docker ps -q -n=1`:/json_api ./clients/bin/json_api
-	docker cp `docker ps -q -n=1`:/logger ./clients/bin/logger
+
+	docker cp $(build_container):/server ./server/bin/server
+	docker cp $(build_container):/json_api ./clients/bin/json_api
+	docker cp $(build_container):/logger ./clients/bin/logger
+
 	chmod 755 ./server/bin/server
 	chmod 755 ./clients/bin/*
+
+build-docker: build-on-docker copy-bin-docker
 
 run:
 	docker-compose build
@@ -22,4 +36,3 @@ run:
 
 docker-up-minimal:
 	docker-compose -f docker-compose.yml -f docker-compose.minimal.yml up
-

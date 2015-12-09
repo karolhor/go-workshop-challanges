@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"github.com/karolhor/go-workshops-challange/common/config"
 )
 
 type LoggerConfig struct {
-	WithRedisConfig
+	config.WithRedisConfig
+	LogFilePath string `json:"log_file_path"`
 }
 
 func NewLoggerConfigFromJSONFile(configPath *string) *LoggerConfig {
@@ -26,14 +28,14 @@ func NewLoggerConfigFromJSONFile(configPath *string) *LoggerConfig {
 	return config
 }
 
-func NewJsonApiConfigFromJSONFile(configPath *string) *WithPortConfig {
+func NewJsonApiConfigFromJSONFile(configPath *string) *config.WithPortConfig {
 	configData, err := ioutil.ReadFile(*configPath)
 
 	if err != nil {
 		log.Fatalf("Could not open json api config file. Path: '%v', Error: '%s", configPath, err)
 	}
 
-	config := &WithPortConfig{}
+	config := &config.WithPortConfig{}
 
 	if err := json.Unmarshal(configData, config); err != nil {
 		log.Fatalf("Json API config is not JSON valid. %v", err)

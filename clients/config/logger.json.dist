@@ -1,6 +1,7 @@
 {
   "redis" : {
-      "address" : "localhost:6379",
-      "pub_sub_channel": "channel"
-    }
+    "address" : "localhost:6379",
+    "pub_sub_channel": "channel"
+  },
+  "log_file_path": "log/logger.log"
 }

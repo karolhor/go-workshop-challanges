@@ -1,0 +1,11 @@
+gopath:
+  build: .
+  dockerfile: Dockerfile.build_gopath
+  volumes:
+    - /go
+
+build:
+  build: .
+  dockerfile: Dockerfile.build
+  volumes_from:
+    - gopath

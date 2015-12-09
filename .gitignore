@@ -31,3 +31,6 @@ clients/config/*
 !server/config/docker/
 !clients/config/docker/
 !*/config/*.json.dist
+
+log/*
+!log/.gitkeep

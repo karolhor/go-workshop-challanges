@@ -1,17 +1,11 @@
 FROM golang
 
-ADD Makefile /
+VOLUME /go
 
-WORKDIR /go/src/github.com/karolhor/go-workshops-challange
-
-ADD server/ server/
-ADD clients/ clients/
-ADD common/ common/
-
-RUN go get -v ./...
+ADD server/ /go/src/github.com/karolhor/go-workshops-challange/server/
+ADD clients/ /go/src/github.com/karolhor/go-workshops-challange/clients/
+ADD common/ /go/src/github.com/karolhor/go-workshops-challange/common/
 
 WORKDIR /
-
-RUN make buildgo
-
-CMD ["/bin/bash"]
+ADD Makefile /
+CMD ["make", "buildgo"]
