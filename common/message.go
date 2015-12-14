@@ -1,8 +1,8 @@
 package message
 
 import (
-	"bytes"
 	"encoding/json"
+	"log"
 )
 
 // Message is basic struct shared with all clients
@@ -11,12 +11,20 @@ type Message struct {
 	Owner string `json:"owner,omitempty"`
 }
 
-func (msg Message) String() string {
+func (m *Message) ToJSON() string {
+	jsonMsg, err := json.Marshal(m)
 
-	var msgResult bytes.Buffer
-	encoder := json.NewEncoder(&msgResult)
+	if err != nil {
+		log.Println("Could not encode msg as json: %v", err)
+	}
 
-	encoder.Encode(msg)
+	return string(jsonMsg)
+}
 
-	return msgResult.String()
+func NewMessageFromJSON(data string) (msg *Message, err error) {
+	msg = &Message{}
+
+	err = json.Unmarshal([]byte(data), msg)
+
+	return
 }

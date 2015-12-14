@@ -22,6 +22,13 @@ type (
 		config.WithRedisConfig
 		MongoDBConfig *mongoDBConfig `json:"mongo"`
 	}
+
+	EventStreamConfig struct {
+		config.WithRedisConfig
+		config.WithPortConfig
+
+		StaticPath string `json:"static_path"`
+	}
 )
 
 func NewLoggerConfigFromJSONFile(configPath *string) *LoggerConfig {
@@ -67,6 +74,22 @@ func NewMongoConfigFromJSONFile(configPath *string) *MongoConfig {
 
 	if err := json.Unmarshal(configData, config); err != nil {
 		log.Fatalf("Mongo config is not JSON valid. %v", err)
+	}
+
+	return config
+}
+
+func NewEventStreamConfigFromJSONFile(configPath *string) *EventStreamConfig {
+	configData, err := ioutil.ReadFile(*configPath)
+
+	if err != nil {
+		log.Fatalf("Could not open event stream config file. Path: '%v', Error: '%s", configPath, err)
+	}
+
+	config := &EventStreamConfig{}
+
+	if err := json.Unmarshal(configData, config); err != nil {
+		log.Fatalf("Event stream config is not JSON valid. %v", err)
 	}
 
 	return config

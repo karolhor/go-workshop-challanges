@@ -22,3 +22,11 @@ mongo_app:
   links:
     - redis
     - mongo
+
+event_stream:
+  build: ./clients
+  dockerfile: event_stream.Dockerfile
+  links:
+    - redis
+  ports:
+    - 8888:8080

@@ -28,14 +28,14 @@ func publishMessage(c *echo.Context) error {
 		return err
 	}
 
-	msg := &message.Message{Owner: "Karol"}
+	msg := &message.Message{}
 	err := c.Bind(msg)
 
 	if err != nil {
 		return echo.NewHTTPError(400, "body content is not in JSON format")
 	}
 
-	fmt.Println(msg.String())
+	fmt.Println(msg.ToJSON())
 
 	return c.NoContent(200)
 }

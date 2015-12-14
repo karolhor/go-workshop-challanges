@@ -1,48 +1,27 @@
 package main
 
 import (
-	"encoding/json"
 	"github.com/karolhor/go-workshops-challange/clients/common"
 	"github.com/karolhor/go-workshops-challange/clients/common/config"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"gopkg.in/redis.v3"
 	"log"
+	"github.com/karolhor/go-workshops-challange/common"
 )
 
 type Message struct {
 	ID      bson.ObjectId `bson:"_id,omitempty" json:"_id,omitempty"`
-	Content string        `json:"message"`
-	Owner   string        `json:"owner"`
+	message.Message
 }
 
-func (m *Message) ToJSON() string {
-	jsonMsg, err := json.Marshal(m)
+func insertMessageToMongo(msgs <-chan *message.Message) {
+	msgFromChannel := <-msgs
+	msg := &Message{Message:*msgFromChannel}
 
-	if err != nil {
-		log.Println("Could not encode msg as json: %v", err)
-	}
+	msg.ID = bson.NewObjectId()
 
-	return string(jsonMsg)
-}
-
-func NewMessageFromJSON(data string) (msg *Message, err error) {
-	msg = &Message{ID: bson.NewObjectId()}
-
-	err = json.Unmarshal([]byte(data), msg)
-
-	return
-}
-
-func insertMessageToMongo(redisMsg *redis.Message) {
-	msg, err := NewMessageFromJSON(redisMsg.Payload)
-
-	if err != nil {
-		log.Println("Not valid message content from redis: %s", redisMsg.Payload)
-	}
-
-	err = messagesCollection.Insert(msg)
+	err := messagesCollection.Insert(msg)
 	if err != nil {
 		log.Println("Insert message error: %v", err)
 		return
@@ -77,5 +56,9 @@ func main() {
 	log.Println("Start listening for redis msg on channel: " + mongoConfig.RedisConfig.PubSubChannel)
 
 	rs := common.NewRedisSubscriber(mongoConfig.RedisConfig)
-	rs.Subscribe(mongoConfig.RedisConfig.PubSubChannel, insertMessageToMongo)
+
+	var msgChannel = make(chan *message.Message)
+
+	go insertMessageToMongo(msgChannel)
+	rs.Subscribe(mongoConfig.RedisConfig.PubSubChannel, msgChannel)
 }

@@ -3,6 +3,7 @@ default: build-docker
 app_dir = $$GOPATH/src/github.com/karolhor/go-workshops-challange
 
 buildgo:
+	mkdir -p $(app_dir)
 	rm -rf $(app_dir)/*
 	cp -r /app/* $(app_dir)
 	cd $(app_dir) && go get -v ./...
@@ -11,6 +12,7 @@ buildgo:
 	cd $(app_dir)/clients/json_api && CGO_ENABLED=0 GOOS=linux go build -ldflags "-s" -a -installsuffix cgo -o /json_api .
 	cd $(app_dir)/clients/logger && CGO_ENABLED=0 GOOS=linux go build -ldflags "-s" -a -installsuffix cgo -o /logger .
 	cd $(app_dir)/clients/mongo && CGO_ENABLED=0 GOOS=linux go build -ldflags "-s" -a -installsuffix cgo -o /mongo .
+	cd $(app_dir)/clients/event_stream && CGO_ENABLED=0 GOOS=linux go build -ldflags "-s" -a -installsuffix cgo -o /event_stream .
 
 
 
@@ -28,6 +30,7 @@ copy-bin-docker:
 	docker cp $(build_container):/json_api ./clients/bin/json_api
 	docker cp $(build_container):/logger ./clients/bin/logger
 	docker cp $(build_container):/mongo ./clients/bin/mongo
+	docker cp $(build_container):/event_stream ./clients/bin/event_stream
 
 	chmod 755 ./server/bin/server
 	chmod 755 ./clients/bin/*
@@ -40,3 +43,6 @@ run:
 
 docker-up-minimal:
 	docker-compose -f docker-compose.yml -f docker-compose.minimal.yml up
+
+complex: build-docker run
+

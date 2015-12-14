@@ -4,16 +4,17 @@ import (
 	"github.com/karolhor/go-workshops-challange/clients/common"
 	"github.com/karolhor/go-workshops-challange/clients/common/config"
 	"gopkg.in/alecthomas/kingpin.v2"
-	"gopkg.in/redis.v3"
 	"io"
 	"log"
 	"os"
+	"github.com/karolhor/go-workshops-challange/common"
 )
 
 var Logger *log.Logger
 
-func logMessage(msg *redis.Message) {
-	Logger.Println(msg.Payload)
+func logMessage(msgs <-chan *message.Message) {
+	msgToLog := <- msgs
+	Logger.Println(msgToLog.ToJSON())
 }
 
 func main() {
@@ -34,5 +35,9 @@ func main() {
 	Logger.Println("Start listening for redis msg on channel: " + loggerConfig.RedisConfig.PubSubChannel)
 
 	rs := common.NewRedisSubscriber(loggerConfig.RedisConfig)
-	rs.Subscribe(loggerConfig.RedisConfig.PubSubChannel, logMessage)
+
+	var msgChannel = make(chan *message.Message)
+
+	go logMessage(msgChannel)
+	rs.Subscribe(loggerConfig.RedisConfig.PubSubChannel, msgChannel)
 }

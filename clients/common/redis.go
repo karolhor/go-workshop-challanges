@@ -3,6 +3,8 @@ package common
 import (
 	"github.com/karolhor/go-workshops-challange/common/config"
 	"gopkg.in/redis.v3"
+	"github.com/karolhor/go-workshops-challange/common"
+	"github.com/labstack/gommon/log"
 )
 
 type (
@@ -11,11 +13,9 @@ type (
 		redisClient *redis.Client
 		channel     string
 	}
-
-	RedisReceiveMsgHandler func(*redis.Message)
 )
 
-func (rs *RedisSubscriber) Subscribe(channel string, handler RedisReceiveMsgHandler) {
+func (rs *RedisSubscriber) Subscribe(channel string, msgChan chan<- *message.Message) {
 	pubsub, err := rs.redisClient.Subscribe(channel)
 
 	if err != nil {
@@ -24,12 +24,19 @@ func (rs *RedisSubscriber) Subscribe(channel string, handler RedisReceiveMsgHand
 	defer pubsub.Close()
 
 	for {
-		msg, err := pubsub.ReceiveMessage()
+		redisMsg, err := pubsub.ReceiveMessage()
+
 		if err != nil {
-			panic(err)
+			log.Println("Error on receiving msg from redis: %v", err)
 		}
 
-		handler(msg)
+		msg, err := message.NewMessageFromJSON(redisMsg.Payload)
+		if err != nil {
+			log.Println("Error on parsing msg: %v", err)
+		}
+
+		log.Println(msg.ToJSON())
+		msgChan <- msg
 	}
 }
 

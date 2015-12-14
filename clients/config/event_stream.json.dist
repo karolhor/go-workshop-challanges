@@ -1,0 +1,8 @@
+{
+  "redis" : {
+    "address" : "localhost:6379",
+    "pub_sub_channel": "channel"
+  },
+  "port" : "8082",
+  "static_path" : "clients/event_stream/static"
+}

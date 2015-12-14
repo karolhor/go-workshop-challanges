@@ -1,0 +1,8 @@
+{
+  "redis" : {
+    "address" : "redis:6379",
+    "pub_sub_channel": "channel"
+  },
+  "port" : "8080",
+  "static_path" : "static"
+}

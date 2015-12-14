@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Event stream app</title>
+    <!-- Angular Material style sheet -->
+    <link rel="stylesheet" href="angular-material.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body ng-app="EventStreamApp" layout="column">
+  <md-toolbar layout="row" >
+    <h1>Event stream app</h1>
+  </md-toolbar>
+  <div layout="row"  class="page-container">
+      <div flex="66" flex-offset="25" layout="column" layout-align="space-between stretch" ng-controller="eventCtrl">
+          <div ng-if="!msgs.length">No messages here</div>
+          <md-card ng-repeat="msg in msgs">
+              <md-card-header>
+                  <md-card-avatar>
+                      <md-icon md-svg-src="message-text.svg" class="md-user-avatar"></md-icon>
+                  </md-card-avatar>
+                  <md-card-header-text>
+                      <span class="md-title">Message</span>
+                      <span class="md-subhead">New Message</span>
+                  </md-card-header-text>
+              </md-card-header>
+              <md-card-title>
+                  <md-card-title-text>
+                      <span class="md-headline">{{msg.owner }} says:</span>
+                  </md-card-title-text>
+              </md-card-title>
+              <md-card-content>
+                  <p>{{msg.message}}</p>
+              </md-card-content>
+          </md-card>
+      </div>
+      <div flex flex-offset="25"/>
+  </div>
+
+<!-- Angular Material requires Angular.js Libraries -->
+<script src="angular.min.js"></script>
+<script src="angular-animate.min.js"></script>
+<script src="angular-aria.min.js"></script>
+<script src="angular-messages.min.js"></script>
+
+<!-- Angular Material Library -->
+<script src="angular-material.min.js"></script>
+
+<!-- Your application bootstrap  -->
+<script type="text/javascript">
+    var app = angular.module('EventStreamApp', ['ngMaterial']);
+
+     app.controller('eventCtrl', ["$scope", function($scope){
+        $scope.msgs = [];
+
+        var es = new EventSource(document.location.href + "api");
+        es.addEventListener('message', function(e){
+            var data = JSON.parse(e.data);
+            $scope.msgs.push(data);
+            $scope.$applyAsync();
+        });
+     }]);
+  </script>
+
+</body>
+</html>

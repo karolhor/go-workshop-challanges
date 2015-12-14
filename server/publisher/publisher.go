@@ -41,7 +41,7 @@ func (p *JsonApiPublisher) Publish(msg *message.Message) error {
 }
 
 func (p *RedisPublisher) Publish(msg *message.Message) error {
-	return p.redisClient.Publish("channel", msg.String()).Err()
+	return p.redisClient.Publish("channel", msg.ToJSON()).Err()
 }
 
 // NewRedisPublisher creates RedisPublisher with default options with given address
